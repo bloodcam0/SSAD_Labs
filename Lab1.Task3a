@@ -1,0 +1,37 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+    int n;
+    cin >> n;
+
+    int arr[n];
+    for (int i = 0; i < n; i++) {
+        cin >> arr[i];
+    }
+
+    int uniqueArr[n];
+    int uniqueIdx = 0;
+    bool isDuplicate = false;
+
+    for (int i = 0; i < n; i++) {
+        isDuplicate = false;
+
+        for (int j = 0; j < uniqueIdx; j++) {
+            if (arr[i] == uniqueArr[j]) {
+                isDuplicate = true;
+                break;
+            }
+        }
+
+        if (!isDuplicate) {
+            uniqueArr[uniqueIdx] = arr[i];
+            uniqueIdx++;
+        }
+    }
+
+    for (int i = 0; i < uniqueIdx; i++) {
+        cout << uniqueArr[i] << " ";
+    }
+    cout << endl;
+}

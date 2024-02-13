@@ -1,0 +1,81 @@
+#include <iostream>
+#include <utility>
+using namespace std;
+
+class Account
+{
+protected:
+    int accountNumber{};
+    double balance{};
+    string ownerName;
+public:
+    Account() = default;
+    Account(int number, double bal, string name)
+        : accountNumber(number), balance(bal), ownerName(std::move(name))
+    {
+    }
+
+    void deposit(double am)
+    {
+        if (am > 0) {
+            balance += am;
+        }
+    }
+
+    void withdraw(double am)
+    {
+        if (am > 0 && balance >= am) {
+            balance -= am;
+        }
+    }
+
+    [[nodiscard]] double getBalance() const
+    {
+        return balance;
+    }
+
+    [[nodiscard]] int getAccountNumber() const
+    {
+        return accountNumber;
+    }
+
+    string getOwnerName()
+    {
+        return ownerName;
+    }
+
+    Account(const Account &) = delete;
+    Account &operator=(const Account &) = delete;
+};
+
+class SavingsAccount: public Account
+{
+private:
+    double interestRate;
+public:
+    SavingsAccount(int num, double bal, string name, double rate) :
+        Account(num, bal, std::move(name)), interestRate(rate) {}
+
+    void calculateInterest() {
+        double interest = balance * (interestRate / 100);
+        deposit(interest);
+    }
+
+    [[nodiscard]] double getInterestRate() const {
+        return interestRate;
+    }
+};
+
+int main()
+{
+    SavingsAccount savings(123456, 1000.0, "John Doe", 2.5);
+    savings.deposit(500.0);
+    savings.withdraw(200.0);
+    savings.calculateInterest();
+    cout << "Account Number: " << savings.getAccountNumber() << endl;
+    cout << "Owner's Name: " << savings.getOwnerName() << endl;
+    cout << "Current Balance: " << savings.getBalance() << endl;
+    cout << "Interest Rate: " << savings.getInterestRate() << "%" << endl;
+    return 0;
+}
+

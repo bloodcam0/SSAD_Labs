@@ -1,0 +1,77 @@
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+class Shape
+{
+public:
+    virtual double area() = 0;
+    virtual double perimeter() = 0;
+};
+
+class Rectangle: public Shape
+{
+private:
+    double width{};
+    double height{};
+public:
+    Rectangle(double w, double h)
+        : width(w), height(h)
+    {}
+
+    double area() override
+    {
+        return width * height;
+    }
+
+    double perimeter() override
+    {
+        return 2 * width + 2 * height;
+    }
+};
+
+class Circle: public Shape
+{
+private:
+    double radius{};
+public:
+    explicit Circle(double r): radius(r) {};
+
+    double area() override {
+        return M_PI * radius * radius;
+    }
+
+    double perimeter() override {
+        return 2 * M_PI * radius;
+    }
+};
+
+int main()
+{
+    Rectangle rectangle(5.0, 3.0);
+    Circle circle(4.0);
+
+    Shape *shape = &rectangle;
+
+    //Demonstrate static casting [1]
+    Rectangle *recPtr = static_cast<Rectangle*>(shape);
+
+    // Demonstrate dynamic casting [2]
+    if (dynamic_cast<Circle*>(shape) != nullptr) {
+        cout << "Shape is a circle" << endl;
+    } else {
+        cout << "Shape is not a circle" << endl;
+    }
+
+    // Demonstrate const casting [3]
+    double recArea = const_cast<Rectangle*>(recPtr)->area();
+    cout << "The area of rectangle: " << recArea << endl;
+
+    int intValue = 42;
+    // Demonstrate reinterpret casting [4]
+    double doubleValue = reinterpret_cast<double&>(intValue);
+    cout << "Reinterpreted double value: "<< doubleValue << endl;
+
+    return 0;
+}
+

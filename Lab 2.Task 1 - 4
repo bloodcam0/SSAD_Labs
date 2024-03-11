@@ -1,0 +1,89 @@
+#include <iostream>
+
+using namespace std;
+
+class Box {
+private:
+    unsigned int length;
+    unsigned int width;
+    unsigned int height;
+public:
+    //default constructor
+    Box() = default;
+
+    //copy constructor
+    Box(Box &other) {
+        this->length = other.length;
+        this->width = other.width;
+        this->height = other.height;
+    }
+
+    //conversion constructor
+    Box(unsigned int l, unsigned int w, unsigned h) : length(l), width(w), height(h) {};
+
+    Box& operator=(const Box &other) {
+        if (this != &other) {
+            length = other.length;
+            width = other.width;
+            height = other.height;
+        }
+        return *this;
+    }
+
+    Box operator*(unsigned int scaleValue) const {
+        Box new_box(length * scaleValue, width * scaleValue, height * scaleValue);
+
+        return new_box;
+    }
+
+    bool operator==(const Box &other) const {
+        bool flag = false;
+        if ((length == other.length && width == other.width && height == other.height) ||
+            (length == other.height && width == other.length && height == other.width) ||
+            (length == other.width && width == other.height && height == other.length)) {
+                flag = true;
+        }
+        return flag;
+    }
+
+    unsigned getVolume() {
+        return this->length * this->width * this->height;
+    }
+
+    void scale(unsigned int scaleValue) {
+        this->length *= scaleValue;
+        this->width *= scaleValue;
+        this->height *= scaleValue;
+    }
+
+    bool isBigger(const Box &other) {
+        bool flag = false;
+        unsigned int volume1 = other.length * other.width * other.height;
+        unsigned int volume2 = this->getVolume();
+        if (volume1 < volume2)
+            flag = true;
+        return flag;
+    }
+
+    bool isSmaller(const Box &other) {
+        bool flag = false;
+        unsigned int volume1 = other.length * other.width * other.height;
+        unsigned int volume2 = this->getVolume();
+        if (volume1 > volume2)
+            flag = true;
+        return flag;
+    }
+};
+
+class Cube {
+private:
+    unsigned int side;
+public:
+    Cube(unsigned int side): side(side) {}
+
+    operator Box() const {
+        return Box(side, side, side);
+    }
+};
+
+int main() {}

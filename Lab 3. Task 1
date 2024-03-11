@@ -1,0 +1,90 @@
+#include <iostream>
+#include <vector>
+
+class Animal {
+protected:
+    std::string name;
+    int age;
+public:
+    Animal(std::string name, int age) : name(name), age(age) {}
+
+    virtual void makeSound() {
+        std::cout << "Animal is making a sound." << std::endl;
+    }
+};
+
+class LandAnimal : public Animal {
+public:
+    LandAnimal(std::string name, int age) : Animal(name, age) {}
+
+    virtual void walk() {
+        std::cout << "Land animal is walking." << std::endl;
+    }
+};
+
+class WaterAnimal : public Animal {
+public:
+    WaterAnimal(std::string name, int age) : Animal(name, age) {}
+
+    virtual void swim() {
+        std::cout << "Water animal is swimming." << std::endl;
+    }
+};
+
+class Lion : public LandAnimal {
+public:
+    Lion(std::string name, int age) : LandAnimal(name, age) {}
+
+    void makeSound() override {
+        std::cout << "Lion is roaring." << std::endl;
+    }
+};
+
+class Dolphin : public WaterAnimal {
+public:
+    Dolphin(std::string name, int age) : WaterAnimal(name, age) {}
+
+    void makeSound() override {
+        std::cout << "Dolphin is chattering." << std::endl;
+    }
+};
+
+class Frog : public LandAnimal, public WaterAnimal {
+public:
+    Frog(std::string name, int age) : Animal(name, age), LandAnimal(name, age), WaterAnimal(name, age) {}
+
+    void makeSound() override {
+        std::cout << "Frog is croaking." << std::endl;
+    }
+
+    void walk() override {
+        std::cout << "Frog is jumping." << std::endl;
+    }
+
+    void swim() override {
+        std::cout << "Frog is swimming." << std::endl;
+    }
+};
+
+int main() {
+    std::vector<Animal*> animals;
+
+    Lion lion("Simba", 5);
+    Dolphin dolphin("Flipper", 8);
+    Frog frog("Froggy", 2);
+
+    animals.push_back(&lion);
+    animals.push_back(&dolphin);
+    animals.push_back(&frog);
+
+    for (const auto& animal : animals) {
+        animal->makeSound();
+        if (LandAnimal* landAnimal = dynamic_cast<LandAnimal*>(animal)) {
+            landAnimal->walk();
+        } else if (WaterAnimal* waterAnimal = dynamic_cast<WaterAnimal*>(animal)) {
+            waterAnimal->swim();
+        }
+    }
+
+    return 0;
+}
